@@ -1,0 +1,39 @@
+name: C++ CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up C++ environment
+        uses: actions/setup-cpp@v1
+        with:
+          compiler: clang # Change to gcc if preferred
+
+      - name: Install dependencies
+        run: sudo apt-get install -y cmake make g++
+
+      - name: Create build directory
+        run: mkdir build
+
+      - name: Build project
+        run: |
+          cd build
+          cmake ..
+          make
+
+      - name: Run tests
+        run: |
+          cd build
+          ctest --output-on-failure
